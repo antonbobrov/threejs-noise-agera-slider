@@ -23,7 +23,7 @@ float fbm(vec3 x, int NUM_OCTAVES) {
 float getNoise() {
   float size = 0.3;
 
-  float xLine = -size + (1.0 + size * 2.0) * u_progress;
+  float xLine = -size + (1.0 + size * 2.0) * (1.0 - u_progress);
 
   vec3 noiseCoords = vec3(vUv.x * u_noiseScale, vUv.y * u_noiseScale, u_time);
 
@@ -42,14 +42,14 @@ vec2 scale(vec2 coord, float value) {
 
 void main() {
   float noiseX = getNoise();
-  float lineNoiseIntensity = 1.0 - smoothstep(noiseX - 0.05, noiseX, vUv.x);
+  float lineNoiseIntensity = smoothstep(noiseX - 0.05, noiseX, vUv.x);
 
   float distortionNoise = cnoise(vec3(vUv, u_time));
 
   float parallaxProgress = pow(u_progress, 2.0);
 
   vec2 prevCoords = vUv + distortionNoise * lineNoiseIntensity;
-  prevCoords.x += parallaxProgress * -u_parallax;
+  prevCoords.x += parallaxProgress * u_parallax;
 
   vec2 nextCoords = vUv + distortionNoise * (1.0 - lineNoiseIntensity);
   nextCoords = scale(nextCoords, 1.0 + (u_scale - 1.0) * (1.0 - parallaxProgress));
