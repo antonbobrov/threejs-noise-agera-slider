@@ -1,12 +1,16 @@
 import { NCallbacks } from '@anton.bobrov/vevet-init';
 
-export interface IProps {
+export interface IChangeableProps {
+  ease?: number;
+  friction?: number;
+}
+
+export interface IProps extends IChangeableProps {
   container: HTMLElement;
   min: number;
   max: number;
   step: number;
-  ease?: number;
-  friction?: number;
+  name?: string;
 }
 
 export interface ICallbacksTypes extends NCallbacks.ITypes {

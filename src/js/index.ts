@@ -26,6 +26,7 @@ Promise.all(imagesSrc.map((src) => loadImage(src)))
       images,
       manager,
       scene: manager.scene,
+      name: 'Slider',
     });
   })
   .catch(() => {});

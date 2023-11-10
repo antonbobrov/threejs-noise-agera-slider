@@ -14,7 +14,7 @@ import fragmentShader from './shaders/fragment.glsl';
 import noise from './shaders/noise.glsl';
 
 export class Slider {
-  private _settings: ReturnType<typeof createDatGUISettings>;
+  private _guiSettings: ReturnType<typeof createDatGUISettings>;
 
   private _slides: ISlide[];
 
@@ -38,7 +38,9 @@ export class Slider {
 
   constructor(private _initialProps: IProps) {
     const name = _initialProps.name ?? this.constructor.name;
+    const { container, images, scene, manager } = _initialProps;
 
+    // create settings
     const settings = createDatGUISettings({
       name,
       settings: {
@@ -81,9 +83,7 @@ export class Slider {
         this._material.needsUpdate = true;
       },
     });
-    this._settings = settings;
-
-    const { container, images, scene, manager } = _initialProps;
+    this._guiSettings = settings;
 
     // create slides
     this._slides = images.map((image, index) => ({
@@ -154,6 +154,7 @@ export class Slider {
       max: this._slides.length - 1,
       step: 1,
       friction: 0.1,
+      name: `${name} ProgressHandler`,
     });
     this._progressHandler.callbacks.add('render', () => this._render());
 
@@ -200,6 +201,8 @@ export class Slider {
 
   /** Destroy the scene */
   destroy() {
+    this._guiSettings.destroy();
+
     this._initialProps.scene.remove(this._mesh);
 
     this._resizeEvent.remove();
